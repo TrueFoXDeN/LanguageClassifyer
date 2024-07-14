@@ -1,6 +1,8 @@
 import torch
 import joblib
+import torch.nn.functional as F
 from train import TextClassifier
+
 
 def predict(model, vectorizer, text, label_encoder, device):
     model.eval()
@@ -8,8 +10,10 @@ def predict(model, vectorizer, text, label_encoder, device):
     text_tensor = torch.tensor(text_vectorized, dtype=torch.float32).to(device)
     with torch.no_grad():
         output = model(text_tensor)
-        _, predicted = torch.max(output.data, 1)
-        return predicted.item()
+        probabilities = F.softmax(output, dim=1)
+        confidence, predicted = torch.max(probabilities, 1)
+        return predicted.item(), confidence.item()
+
 
 def main():
     while True:
@@ -31,9 +35,10 @@ def main():
         print('Eingabe:')
         # Beispielhafte Nutzung des Modells zur Vorhersage
         example_text = input()
-        prediction = predict(model, vectorizer, example_text, label_encoder, device)
+        prediction, confidence = predict(model, vectorizer, example_text, label_encoder, device)
         language = label_encoder.inverse_transform([prediction])[0]
-        print(f"Der eingegebene Text ist in {language}.\n")
+        print(f"Der eingegebene Text ist in {language} mit einer Konfidenz von {confidence:.2f}.\n")
+
 
 if __name__ == "__main__":
     main()
