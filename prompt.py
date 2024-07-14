@@ -37,7 +37,7 @@ def main():
         example_text = input()
         prediction, confidence = predict(model, vectorizer, example_text, label_encoder, device)
         language = label_encoder.inverse_transform([prediction])[0]
-        print(f"Der eingegebene Text ist in {language} mit einer Konfidenz von {confidence:.2f}.\n")
+        print(f"Der eingegebene Text ist in {language.upper()} mit einer Konfidenz von {confidence:.2f}.\n")
 
 
 if __name__ == "__main__":

@@ -106,7 +106,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    num_epochs = 1
+    num_epochs = 3
 
     for epoch in range(num_epochs):
         print(f'Starte Epoche {epoch + 1} von {num_epochs}...')
